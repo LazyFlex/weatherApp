@@ -50,11 +50,11 @@
 .weather-right{
     /* display: flex; */
     justify-content: center;
-    background-color: red;
+    /* background-color: red; */
 }
 
 .weather-left{
-    background-color: rgb(46, 46, 30);
+    /* background-color: rgb(46, 46, 30); */
     
 }
 
