@@ -3,7 +3,7 @@ import "./CurrentWeather.css";
 import iconMappings from "../assets/weatherIcons";
 
 import { FaLongArrowAltUp,FaLongArrowAltDown } from "react-icons/fa";
-import { WiDirectionUp,WiDirectionDown, WiStrongWind, WiHumidity } from "react-icons/wi";
+import {  WiStrongWind, WiHumidity } from "react-icons/wi";
 // import windIcon from "../assets/icons/wind.png";
 // import humidityIcon from "../assets/icons/humidity.png";
 

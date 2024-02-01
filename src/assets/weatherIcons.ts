@@ -7,6 +7,8 @@ import rain from "../assets/flat/09d.png";
 import rainD from "../assets/flat/10d.png";
 import rainN from "../assets/flat/10n.png";
 import snow from "../assets/flat/13d.png";
+import mistN from "../assets/flat/50d.png";
+import mistD from "../assets/flat/50d.png";
 
 
 
@@ -26,6 +28,8 @@ const iconMappings: Record<string, string> = {
   '10n': rainN,
   '13d': snow,
   '13n': snow,
+  '50d': mistD,
+  '50n': mistN,
 };
 
 export default iconMappings;
