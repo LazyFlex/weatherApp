@@ -2,19 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./CurrentWeather.css";
 import iconMappings from "../assets/weatherIcons";
 
+import { getTimeZone, formatSunriseSunset } from "./utils";
 import { FaLongArrowAltUp,FaLongArrowAltDown } from "react-icons/fa";
 import {  WiStrongWind, WiHumidity } from "react-icons/wi";
 // import windIcon from "../assets/icons/wind.png";
 // import humidityIcon from "../assets/icons/humidity.png";
 
-// Function to get time zone based on offset
-function getTimeZone(offsetSeconds) {
-  const offsetHours = offsetSeconds / 3600; // Convert seconds to hours
-  const timeZone = `Etc/GMT${offsetHours >= 0 ? "-" : "+"}${Math.abs(
-    offsetHours
-  )}`;
-  return timeZone;
-}
+
 
 const CurrentWeather: React.FC = () => {
   const api_key = "8a4fb5fcac39b5861795fd2c6f4ce1cb";
@@ -26,13 +20,13 @@ const CurrentWeather: React.FC = () => {
   const [humidity, setHumidity] = useState("");
   const [windRate, setWindRate] = useState("");
   const [temperature, setTemperature] = useState("");
-  const [feelsLike, setFeelsLike] = useState<string>("");
-  const [high, setHigh] = useState<string>("");
-  const [low, setLow] = useState<string>("");
-  const [sunrise, setSunrise] = useState<string>("");
-  const [sunset, setSunset] = useState<string>("");
-  const [timezoneOffsetSeconds, setTimezoneOffsetSeconds] = useState(0);
-  const [description, Setdescription] = useState("");
+  const [feelsLike, setFeelsLike] = useState("");
+  const [high, setHigh] = useState("");
+  const [low, setLow] = useState("");
+  const [sunrise, setSunrise] = useState("");
+  const [sunset, setSunset] = useState("");
+  const [description, SetDescription] = useState("");
+ 
 
   useEffect(() => {
     if (city) {
@@ -64,51 +58,28 @@ const CurrentWeather: React.FC = () => {
       setLow(
         Math.round(data.main.temp_min) + (unit === "metric" ? "°C" : "°F")
       );
-      // Set timezone offset and sunrise/sunset times
-      const sunriseMilliseconds =
-        (data.sys.sunrise + timezoneOffsetSeconds) * 1000;
-      const sunsetMilliseconds =
-        (data.sys.sunset + timezoneOffsetSeconds) * 1000;
-
-      const sunriseDate = new Date(sunriseMilliseconds);
-      const sunsetDate = new Date(sunsetMilliseconds);
-
-      const formattedSunrise = new Intl.DateTimeFormat("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: getTimeZone(data.timezone), // Dynamic time zone based on city
-      }).format(sunriseDate);
-
-      const formattedSunset = new Intl.DateTimeFormat("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: getTimeZone(data.timezone), // Dynamic time zone based on city
-      }).format(sunsetDate);
-
+   
+      // Get sunrise and sunset from api and transform them through utils.ts
+      const { sunrise, sunset } = data.sys;
+      const { formattedSunrise, formattedSunset } = formatSunriseSunset(
+        sunrise * 1000,
+        sunset * 1000, 
+        getTimeZone(data.timezone)
+      );
       setSunrise(formattedSunrise);
       setSunset(formattedSunset);
 
-      Setdescription(data.weather[0].description);
-
-      const weatherIcon = iconMappings[data.weather[0].icon];
-      setIcon(weatherIcon);
+      
+      SetDescription(data.weather[0].description);
+      setIcon(iconMappings[data.weather[0].icon]);
       setCountry(data.sys.country);
+
+
     } catch (error) {
       console.error(error);
     }
   };
 
-  const search = () => {
-    const element = document.getElementsByClassName(
-      "cityInput"
-    ) as HTMLCollectionOf<HTMLInputElement>;
-    if (element[0].value === "") {
-      return 0;
-    }
-    setCity(element[0].value);
-  };
 
   const toggleUnit = () => {
     setUnit(unit === "metric" ? "imperial" : "metric");
@@ -139,7 +110,7 @@ const CurrentWeather: React.FC = () => {
           </div>
           <div className="weather-temp">{temperature}</div>
           <div className="weather-location">
-            {city[0].toUpperCase() + city.substring(1)}, {country}
+            {city ? city[0].toUpperCase() + city.substring(1) : "Montreal"}, {country}
           </div>
           <div className="weather-description">{description}</div>
         </div>
